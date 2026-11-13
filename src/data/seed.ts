@@ -6,7 +6,11 @@ const departmentSetup = [
     name: 'Склад',
     activeEmployees: 132,
     recentActiveHires: 32,
+    activeHiresLast30Days: 9,
+    activeHiresDays31To90: 14,
     departures: 18,
+    departuresLast30Days: 6,
+    earlyDeparturesLast30Days: 3,
     earlyDepartures: 9,
     position: 'Сотрудник склада',
   },
@@ -15,7 +19,11 @@ const departmentSetup = [
     name: 'Магазины',
     activeEmployees: 114,
     recentActiveHires: 24,
+    activeHiresLast30Days: 7,
+    activeHiresDays31To90: 10,
     departures: 10,
+    departuresLast30Days: 3,
+    earlyDeparturesLast30Days: 1,
     earlyDepartures: 2,
     position: 'Специалист магазина',
   },
@@ -24,7 +32,11 @@ const departmentSetup = [
     name: 'Продажи',
     activeEmployees: 86,
     recentActiveHires: 16,
+    activeHiresLast30Days: 5,
+    activeHiresDays31To90: 7,
     departures: 5,
+    departuresLast30Days: 2,
+    earlyDeparturesLast30Days: 1,
     earlyDepartures: 1,
     position: 'Менеджер по продажам',
   },
@@ -33,7 +45,11 @@ const departmentSetup = [
     name: 'Офис',
     activeEmployees: 68,
     recentActiveHires: 12,
+    activeHiresLast30Days: 3,
+    activeHiresDays31To90: 5,
     departures: 3,
+    departuresLast30Days: 1,
+    earlyDeparturesLast30Days: 0,
     earlyDepartures: 0,
     position: 'Специалист офиса',
   },
@@ -90,6 +106,7 @@ export function createSeedData(asOfDate: ISODate = toISODate(new Date())): AppDa
   let employeeSequence = 0
   let departureSequence = 0
   let reasonSequence = 0
+  let recentDepartureSequence = 0
 
   const nextEmployeeId = () => `employee-${String(++employeeSequence).padStart(4, '0')}`
 
@@ -115,7 +132,12 @@ export function createSeedData(asOfDate: ISODate = toISODate(new Date())): AppDa
   for (const department of departmentSetup) {
     for (let index = 0; index < department.recentActiveHires; index += 1) {
       const id = nextEmployeeId()
-      const hireDate = addDays(asOfDate, -(100 + ((employeeSequence + index) % 261)))
+      const hireDateOffset = index < department.activeHiresLast30Days
+        ? 1 + ((index + employeeSequence) % 29)
+        : index < department.activeHiresLast30Days + department.activeHiresDays31To90
+          ? 30 + ((index + employeeSequence) % 60)
+          : 91 + ((index + employeeSequence) % 274)
+      const hireDate = addDays(asOfDate, -hireDateOffset)
       employees.push(
         createEmployee(
           id,
@@ -143,12 +165,23 @@ export function createSeedData(asOfDate: ISODate = toISODate(new Date())): AppDa
 
   for (const department of departmentSetup) {
     for (let index = 0; index < department.departures; index += 1) {
-      const isEarly = index < department.earlyDepartures
+      const isRecentDeparture = index < department.departuresLast30Days
+      const earlyDeparturesAfter30Days =
+        department.earlyDepartures - department.earlyDeparturesLast30Days
+      const isEarly = isRecentDeparture
+        ? index < department.earlyDeparturesLast30Days
+        : index - department.departuresLast30Days < earlyDeparturesAfter30Days
+      const recentEarlyDeparture = isRecentDeparture && isEarly
       const tenureDays = isEarly
-        ? 20 + ((departureSequence * 7) % 65)
+        ? recentEarlyDeparture
+          ? 20 + (recentDepartureSequence % 40)
+          : 20 + ((departureSequence * 7) % 65)
         : 100 + ((departureSequence * 11) % 51)
-      const daysBeforeDeparture = 180 + ((departureSequence * 7) % 30)
+      const daysBeforeDeparture = isRecentDeparture
+        ? 1 + (recentDepartureSequence % 29)
+        : 30 + (recentDepartureSequence % 60)
       const departureDate = addDays(asOfDate, -daysBeforeDeparture)
+      recentDepartureSequence += 1
       const hireDate = addDays(departureDate, -tenureDays)
       const employeeId = nextEmployeeId()
 

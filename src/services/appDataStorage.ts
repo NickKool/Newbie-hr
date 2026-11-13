@@ -1,7 +1,7 @@
 import type { AppData } from '../types/dataModel'
 import { seedData } from '../data/seed'
 
-const storageKey = 'newbie-hr-app-data'
+const storageKey = 'newbie-hr-app-data-seed-v2'
 
 export function loadAppData(): AppData {
   try {
