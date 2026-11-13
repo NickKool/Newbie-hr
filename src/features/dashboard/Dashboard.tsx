@@ -1,13 +1,16 @@
 import { ArrowDownRight, ArrowUpRight, CalendarDays } from 'lucide-react'
-import { seedData } from '../../data/seed'
+import type { AppData } from '../../types/dataModel'
 import { DashboardCharts } from './DashboardCharts'
 import { getDashboardData } from './dashboardData'
 import { KpiGrid } from './KpiGrid'
 import { RecentSignals } from './RecentSignals'
 
-const dashboardData = getDashboardData(seedData)
+type DashboardProps = {
+  data: AppData
+}
 
-export function Dashboard() {
+export function Dashboard({ data }: DashboardProps) {
+  const dashboardData = getDashboardData(data)
   return (
     <div className="space-y-5">
       <div className="flex flex-wrap items-center justify-between gap-3">
