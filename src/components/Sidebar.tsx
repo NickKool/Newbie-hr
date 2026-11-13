@@ -9,20 +9,20 @@ type SidebarProps = {
 export function Sidebar({ activeSection, onNavigate }: SidebarProps) {
   return (
     <aside className="flex w-full flex-col border-b border-slate-200 bg-white px-4 py-4 md:min-h-screen md:w-64 md:border-b-0 md:border-r md:px-5 md:py-7">
-      <a className="mb-6 flex items-center gap-3 px-2 md:mb-10" href="#dashboard" aria-label="Newbie HR home">
+      <a className="mb-6 flex items-center gap-3 px-2 md:mb-10" href="#dashboard" aria-label="На главную Newbie HR">
         <span className="flex size-10 items-center justify-center rounded-xl bg-indigo-600 text-white shadow-sm shadow-indigo-200">
           <Hexagon size={21} strokeWidth={2.2} />
         </span>
         <span>
           <span className="block text-[15px] font-semibold tracking-tight text-slate-900">Newbie HR</span>
-          <span className="mt-0.5 block text-xs text-slate-500">People intelligence</span>
+          <span className="mt-0.5 block text-xs text-slate-500">Аналитика персонала</span>
         </span>
       </a>
 
       <p className="mb-3 hidden px-3 text-[10px] font-semibold uppercase tracking-[0.16em] text-slate-400 md:block">
-        Workspace
+        Рабочая область
       </p>
-      <nav aria-label="Main navigation" className="flex gap-1 overflow-x-auto md:flex-col">
+      <nav aria-label="Основная навигация" className="flex gap-1 overflow-x-auto md:flex-col">
         {navigationItems.map(({ label, icon: Icon }) => {
           const isActive = activeSection === label
 
@@ -40,7 +40,7 @@ export function Sidebar({ activeSection, onNavigate }: SidebarProps) {
             >
               <Icon size={17} strokeWidth={1.8} />
               <span>{label}</span>
-              {label === 'Automation Center' && (
+              {label === 'Центр автоматизации' && (
                 <span className="ml-auto hidden size-1.5 rounded-full bg-slate-300 md:block" />
               )}
             </button>
@@ -50,12 +50,12 @@ export function Sidebar({ activeSection, onNavigate }: SidebarProps) {
 
       <div className="mt-auto hidden rounded-xl border border-slate-200 bg-slate-50/80 p-4 md:block">
         <div className="mb-2 flex items-center justify-between">
-          <span className="text-xs font-semibold text-slate-800">Demo workspace</span>
-          <span className="rounded-full bg-emerald-50 px-2 py-0.5 text-[10px] font-medium text-emerald-700">Ready</span>
+          <span className="text-xs font-semibold text-slate-800">Демо-пространство</span>
+          <span className="rounded-full bg-emerald-50 px-2 py-0.5 text-[10px] font-medium text-emerald-700">Готово</span>
         </div>
-        <p className="text-xs leading-5 text-slate-500">A private space for exploring onboarding insights.</p>
+        <p className="text-xs leading-5 text-slate-500">Пространство для изучения адаптации новых сотрудников.</p>
         <button type="button" className="mt-3 inline-flex items-center gap-1 text-xs font-medium text-indigo-700 hover:text-indigo-800">
-          Workspace settings <Settings2 size={13} />
+          Настройки пространства <Settings2 size={13} />
         </button>
       </div>
 
@@ -63,8 +63,8 @@ export function Sidebar({ activeSection, onNavigate }: SidebarProps) {
         <div className="flex items-center gap-2.5">
           <div className="flex size-8 items-center justify-center rounded-full bg-violet-100 text-xs font-semibold text-violet-700">HR</div>
           <div>
-            <p className="text-xs font-medium text-slate-800">HR workspace</p>
-            <p className="mt-0.5 text-[11px] text-slate-500">Demo account</p>
+            <p className="text-xs font-medium text-slate-800">Рабочая область HR</p>
+            <p className="mt-0.5 text-[11px] text-slate-500">Демо-аккаунт</p>
           </div>
         </div>
         <ArrowUpRight size={15} className="text-slate-400" />
