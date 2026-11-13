@@ -6,7 +6,6 @@ import type {
 } from "../types/dataModel";
 import { SectionPlaceholder } from "../components/SectionPlaceholder";
 import { AutomationCenter } from "../features/automation/AutomationCenter";
-import { Analytics } from "../features/analytics/Analytics";
 import { Dashboard } from "../features/dashboard/Dashboard";
 import { Sidebar } from "../components/Sidebar";
 import { loadAppData, saveAppData } from "../services/appDataStorage";
@@ -15,11 +14,10 @@ const sectionDescriptions: Record<string, string> = {
   "Панель управления":
     "Ключевые показатели адаптации, ранних увольнений и состояния задач.",
   Аналитика:
-    "Сравнение увольнений по подразделениям и анализ причин за выбранный период.",
+    "Здесь будут доступны тенденции по подразделениям и причины увольнений.",
   "Центр автоматизации":
     "Просматривайте сигналы о проблемах адаптации и управляйте внутренними задачами.",
-  Сотрудники:
-    "Здесь появятся список сотрудников и карточки адаптации после добавления данных.",
+  Сотрудники: "Список сотрудников и карточки.",
 };
 
 function App() {
@@ -117,8 +115,6 @@ function App() {
 
           {activeSection === "Панель управления" ? (
             <Dashboard data={appData} />
-          ) : activeSection === "Аналитика" ? (
-            <Analytics data={appData} />
           ) : activeSection === "Центр автоматизации" ? (
             <AutomationCenter
               data={appData}
