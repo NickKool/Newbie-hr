@@ -5,10 +5,17 @@ export type DepartmentDepartureDistribution = {
   departmentName: string
   departures: number
   earlyDepartures: number
+  earlyDepartureRate: number | null
 }
 
 export type DepartureReasonDistribution = {
   reason: string
+  departures: number
+}
+
+export type MonthlyHiringDepartureTrend = {
+  month: string
+  hires: number
   departures: number
 }
 
@@ -94,15 +101,64 @@ export function getDepartmentDepartureDistribution(
       return employee?.departmentId === department.id && isWithinPeriod(departure.date, period)
     })
 
+    const earlyDepartures = departmentDepartures.filter((departure) =>
+      isEarlyDeparture(data, departure.employeeId, departure.date),
+    ).length
+
     return {
       departmentId: department.id,
       departmentName: department.name,
       departures: departmentDepartures.length,
-      earlyDepartures: departmentDepartures.filter((departure) =>
-        isEarlyDeparture(data, departure.employeeId, departure.date),
-      ).length,
+      earlyDepartures,
+      earlyDepartureRate:
+        departmentDepartures.length === 0
+          ? null
+          : (earlyDepartures / departmentDepartures.length) * 100,
     }
   })
+}
+
+export function getMonthlyHiringDepartureTrend(
+  data: AppData,
+  period: DatePeriod,
+): MonthlyHiringDepartureTrend[] {
+  const months = new Map<string, MonthlyHiringDepartureTrend>()
+  const startMonth = `${period.startDate.slice(0, 7)}-01`
+  const endMonth = `${period.endDate.slice(0, 7)}-01`
+  const cursor = new Date(`${startMonth}T00:00:00Z`)
+  const lastMonth = new Date(`${endMonth}T00:00:00Z`)
+
+  while (cursor <= lastMonth) {
+    const key = cursor.toISOString().slice(0, 7)
+    const label = new Intl.DateTimeFormat('ru-RU', { month: 'short', timeZone: 'UTC' })
+      .format(cursor)
+      .replace('.', '')
+
+    months.set(key, { month: label, hires: 0, departures: 0 })
+    cursor.setUTCMonth(cursor.getUTCMonth() + 1)
+  }
+
+  for (const employee of data.employees) {
+    if (isWithinPeriod(employee.hireDate, period)) {
+      const month = months.get(employee.hireDate.slice(0, 7))
+
+      if (month) {
+        month.hires += 1
+      }
+    }
+  }
+
+  for (const departure of data.departures) {
+    if (isWithinPeriod(departure.date, period)) {
+      const month = months.get(departure.date.slice(0, 7))
+
+      if (month) {
+        month.departures += 1
+      }
+    }
+  }
+
+  return Array.from(months.values())
 }
 
 export function getDepartureReasonDistribution(

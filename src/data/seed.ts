@@ -178,8 +178,44 @@ export function createSeedData(asOfDate: ISODate = toISODate(new Date())): AppDa
     onboardingTasks,
     departures,
     surveyResponses: [],
-    automationSignals: [],
-    internalTasks: [],
+    automationSignals: [
+      {
+        id: 'signal-early-departures-warehouse',
+        ruleId: 'early-departure-alert',
+        detectedAt: asOfDate,
+        status: 'New',
+        departmentId: 'department-warehouse',
+        onboardingTaskId: null,
+        internalTaskId: 'internal-task-early-departures-warehouse',
+      },
+      {
+        id: 'signal-overdue-onboarding-task',
+        ruleId: 'overdue-onboarding-task',
+        detectedAt: asOfDate,
+        status: 'In Progress',
+        departmentId: null,
+        onboardingTaskId: onboardingTasks[0]?.id ?? null,
+        internalTaskId: 'internal-task-overdue-onboarding-task',
+      },
+    ],
+    internalTasks: [
+      {
+        id: 'internal-task-early-departures-warehouse',
+        signalId: 'signal-early-departures-warehouse',
+        title: 'Проверить ранние увольнения',
+        assigneeLabel: 'Специалист HR',
+        status: 'Open',
+        createdAt: asOfDate,
+      },
+      {
+        id: 'internal-task-overdue-onboarding-task',
+        signalId: 'signal-overdue-onboarding-task',
+        title: 'Завершить просроченную задачу адаптации',
+        assigneeLabel: onboardingTasks[0]?.assigneeLabel ?? 'Руководитель отдела',
+        status: 'In Progress',
+        createdAt: asOfDate,
+      },
+    ],
   }
 }
 

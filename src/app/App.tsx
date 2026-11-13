@@ -1,10 +1,11 @@
 import { Bell, ChevronDown, Search } from 'lucide-react'
 import { useState } from 'react'
 import { SectionPlaceholder } from '../components/SectionPlaceholder'
+import { Dashboard } from '../features/dashboard/Dashboard'
 import { Sidebar } from '../components/Sidebar'
 
 const sectionDescriptions: Record<string, string> = {
-  'Панель управления': 'Здесь появится обзор адаптации и опыта новых сотрудников после подключения демонстрационных данных.',
+  'Панель управления': 'Ключевые показатели адаптации, ранних увольнений и состояния задач.',
   Аналитика: 'Здесь будут доступны тенденции по подразделениям и причины увольнений.',
   'Центр автоматизации': 'Здесь появятся сигналы и внутренняя очередь HR-задач после реализации автоматизаций.',
   Сотрудники: 'Здесь появятся список сотрудников и карточки адаптации после добавления данных.',
@@ -46,14 +47,18 @@ function App() {
             <div>
               <p className="mb-2 text-xs font-medium text-slate-400">Аналитика персонала / Обзор</p>
               <h1 className="text-2xl font-semibold tracking-tight text-slate-900 md:text-[28px]">{activeSection}</h1>
-              <p className="mt-1.5 text-sm text-slate-500">Понятный обзор адаптации новых сотрудников.</p>
+              <p className="mt-1.5 text-sm text-slate-500">{sectionDescriptions[activeSection]}</p>
             </div>
             <span className="rounded-full border border-slate-200 bg-white px-3 py-1.5 text-xs font-medium text-slate-500">
               Демонстрационная среда
             </span>
           </div>
 
-          <SectionPlaceholder section={activeSection} description={sectionDescriptions[activeSection]} />
+          {activeSection === 'Панель управления' ? (
+            <Dashboard />
+          ) : (
+            <SectionPlaceholder section={activeSection} description={sectionDescriptions[activeSection]} />
+          )}
 
           <footer className="mt-6 flex flex-col gap-1 text-[11px] text-slate-400 sm:flex-row sm:items-center sm:justify-between">
             <span>Newbie HR · Аналитика персонала</span>
